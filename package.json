@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ejs": "^1.0.0",
     "express": "^4.16.3",
     "google-charts": "^1.1.0",
     "heroku": "^7.0.12",

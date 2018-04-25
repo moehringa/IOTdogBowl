@@ -4,11 +4,16 @@
  
  #include <ESP8266WiFi.h>
  #include <PubSubClient.h>
+ using namespace std;
 
  // WiFi credentials.
-const char* WIFI_SSID = "ZyXEL45800";
-const char* WIFI_PASS = "47231A5C86";
-const char* device_id = "waterbowl9001";
+//const char* WIFI_SSID = "ZyXEL45800";
+//const char* WIFI_PASS = "47231A5C86";
+//const char* device_id = "waterbowl9001";
+
+const char* WIFI_SSID = "xavierguest";
+const char* WIFI_PASS = "";
+const char* device_id = "";
 
 // MQTT credentials.
 const char* mqtt_server = "m10.cloudmqtt.com";
@@ -18,6 +23,9 @@ const char* mqtt_password = "RT32-M2D4Yqn";
 
 #define in_topic "waterbowl9001/statusIn"
 #define out_topic "waterbowl9001/statusOut"
+#define waterLevel "waterbowl9001/waterLevel"
+
+int digitalPin;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -114,25 +122,50 @@ void loop() {
   }
   
   String stat = "";
+  int level = analogRead(A0)/10;
 
-   if(digitalRead(digitalPin) == HIGH){
+   if(level >= 90){
     stat = "DRY";
+    
     }
    else{
     stat = "Filled";
+    
     }
    
    Serial.print("Waterbowl Status: ");
    Serial.print(stat);
+   Serial.println();
+   Serial.print("Waterbowl Level: ");
+   Serial.print(level);
    Serial.println();
 
    delay(1000);
 
   client.loop();
 
+  string lev = convertInt(level);
+  
   client.publish(out_topic, stat.c_str());
+  client.publish(waterLevel, lev.c_str());
   delay(1000);
   client.subscribe(out_topic);
+  client.subscribe(waterLevel);
   delay(1000);
+}
 
+string convertInt(int number)
+{
+    if (number == 0)
+        return "0";
+    string temp="";
+    string returnvalue="";
+    while (number>0)
+    {
+        temp+=number%10+48;
+        number/=10;
+    }
+    for (int i=0;i<temp.length();i++)
+        returnvalue+=temp[temp.length()-i-1];
+    return returnvalue;
 }
