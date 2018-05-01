@@ -7,8 +7,8 @@
  using namespace std;
 
  // WiFi credentials.
-//const char* WIFI_SSID = "ZyXEL45800";
-//const char* WIFI_PASS = "47231A5C86";
+//const char* WIFI_SSID = "YOUR WIFI NAME";
+//const char* WIFI_PASS = "YOUR WIFI PASSWORD";
 //const char* device_id = "waterbowl9001";
 
 const char* WIFI_SSID = "xavierguest";
@@ -16,10 +16,10 @@ const char* WIFI_PASS = "";
 const char* device_id = "";
 
 // MQTT credentials.
-const char* mqtt_server = "m10.cloudmqtt.com";
-const int mqtt_port = 14665;
-const char* mqtt_user = "dkambmyb";
-const char* mqtt_password = "RT32-M2D4Yqn";
+const char* mqtt_server = "YOUR MQTT SERVER";
+const int mqtt_port = 999999999;
+const char* mqtt_user = "YOUR MQTT USER NAME";
+const char* mqtt_password = "YOUR MQTT PASSWORD";
 
 #define in_topic "waterbowl9001/statusIn"
 #define out_topic "waterbowl9001/statusOut"
