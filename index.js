@@ -3,7 +3,7 @@ var mqtt = require('mqtt')
 var fs = require('fs');
 var express = require('express')
 var app = express()
-var twilio = require('twilio')('','')
+var twilio = require('twilio')('ACc9bfbf4b54d76f023ef9eea3e59b850b','135d85204d462c6314281db43c8e9e2b')
 
 app.set('view engine', 'ejs')
 
@@ -50,7 +50,7 @@ client.on('message', function (topic, message) {
       previousStatus = currentStatus
       twilio.messages
         .create({
-          body: 'Waterbowl Status: '+currentStatus+ ' : ' + currentLevel,
+          body: 'Waterbowl Status: '+currentStatus,
           to: '+15132567474',
           from: '+18127479763',
         })
