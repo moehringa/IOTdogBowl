@@ -3,13 +3,22 @@ var mqtt = require('mqtt')
 var fs = require('fs');
 var express = require('express')
 var app = express()
+
+//////////////////////////////////////////
 //Put your twilio information here
 var twilio = require('twilio')('key','key')
+///////////////////////////////////////////
+///////////////////////////////////////////
 
 app.set('view engine', 'ejs')
 
 // Use my cloudMQTT credentials
 var client = mqtt.connect('YOUR_SERVER:YOUR_PORT', {
+  ////////////////////////////////////////////
+  //////////////////////////////////////////
+  /////////COMPLETE THESE MQTT FIELDS/////////
+  ////////////////////////////////////////////
+  //////////////////////////////////////////
   username: "YOUR USERNAME FOR MQTT",
   password: "YOUR PASSWORD FOR MQTT"
 })
@@ -51,9 +60,14 @@ client.on('message', function (topic, message) {
       previousStatus = currentStatus
       twilio.messages
         .create({
+          //////////////////////////////////////////
+          //////////////////////////////////////////
+          //////// COMPLETE THESE PHONE FIELDS ////
+          //////////////////////////////////////////
           body: 'Waterbowl Status: '+currentStatus,
           to: 'YOUR PHONE NUMBER',
           from: 'YOUR TWILIO PHONE NUMBER',
+          ////////////////////////////////////////////
         })
         .then(message => process.stdout.write('\n'+message.sid));
     }
