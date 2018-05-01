@@ -1,7 +1,7 @@
 /**
  * Waterbowl Sensor
  */
- 
+
  #include <ESP8266WiFi.h>
  #include <PubSubClient.h>
  using namespace std;
@@ -25,11 +25,14 @@ const char* mqtt_password = "YOUR MQTT PASSWORD";
 #define out_topic "waterbowl9001/statusOut"
 #define waterLevel "waterbowl9001/waterLevel"
 
+//set the int for the digital print
+//no longer used as analog is used
 int digitalPin;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+//code to be run when mqtt subscriber receives something
 void callback(char* topic, byte* payload, unsigned int length){
   Serial.print("Message arrived in topic: ");
   Serial.print(topic);
@@ -42,6 +45,7 @@ void callback(char* topic, byte* payload, unsigned int length){
     Serial.println("---------------------");
   }
 
+//connect to wifi and mqtt
 void connect() {
 
   // Connect to Wifi.
@@ -67,15 +71,15 @@ void connect() {
   Serial.print(WiFi.localIP());
 
   // Connect to MQTT.
-  client.setServer(mqtt_server, mqtt_port); 
+  client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
-  
+
   Serial.println();
   Serial.println("Connecting to CloudMQTT...");
 
   while(!client.connected()) {
     delay(500);
-    
+
     if(client.connect(device_id, mqtt_user, mqtt_password)){
       Serial.println("Connected to CloudMQTT");
       Serial.println();
@@ -85,11 +89,13 @@ void connect() {
         Serial.println("failed with state ");
         Serial.println(client.state());
         }
-      
-      Serial.print(".");   
+
+      Serial.print(".");
   }
-  
+
 }
+
+
 
 void setup() {
   Serial.begin(115200);
@@ -104,9 +110,10 @@ void setup() {
 
 void loop() {
 
-  
+  //do I need to reconnect?
   bool toReconnect = false;
 
+  //If I lose connection reconnect
   if(WiFi.status() != WL_CONNECTED) {
     Serial.println("Disconnected from WiFi");
     toReconnect = true;
@@ -120,19 +127,19 @@ void loop() {
   if(toReconnect) {
     connect();
   }
-  
+
   String stat = "";
   int level = analogRead(A0)/10;
 
    if(level >= 90){
     stat = "DRY";
-    
+
     }
    else{
     stat = "Filled";
-    
+
     }
-   
+
    Serial.print("Waterbowl Status: ");
    Serial.print(stat);
    Serial.println();
@@ -145,7 +152,8 @@ void loop() {
   client.loop();
 
   string lev = convertInt(level);
-  
+
+  //publish the readings
   client.publish(out_topic, stat.c_str());
   client.publish(waterLevel, lev.c_str());
   delay(1000);
@@ -154,6 +162,7 @@ void loop() {
   delay(1000);
 }
 
+//convert integer to something more readable interpretable
 string convertInt(int number)
 {
     if (number == 0)
@@ -169,6 +178,3 @@ string convertInt(int number)
         returnvalue+=temp[temp.length()-i-1];
     return returnvalue;
 }
-
-
-

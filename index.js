@@ -28,6 +28,7 @@ var previousStatus = 'DRY'
 var currentStatus = 'DRY'
 var currentLevel
 
+//render the guage on the index page
 app.get('/', function (req, res) {
 
   res.render('gauge', {
@@ -35,10 +36,11 @@ app.get('/', function (req, res) {
   });
 })
 
-// When I connected, do something
+// When I connect, do something
 client.on('connect', function () {
   console.log("Connected to MQTT.")
 
+  //subscribe to the mqtt topics
   client.subscribe('waterbowl9001/statusOut')
   client.subscribe('waterbowl9001/waterLevel')
 })
@@ -77,6 +79,7 @@ client.on('message', function (topic, message) {
   }
 })
 
+//port 3000 on localhost
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
